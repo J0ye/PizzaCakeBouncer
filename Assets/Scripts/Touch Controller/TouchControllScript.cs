@@ -1,15 +1,37 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
-public class TouchControllScript : MonoBehaviour {
+[System.Serializable]
+public class Vector2Event : UnityEvent<Vector2> { }
+
+public class TouchControllScript : MonoBehaviour 
+{
+
+    public static TouchControllScript INSTANCE;
 
     public LayerMask touchInputMask;
     public float touchRange = 1f;
 
+    public Vector2Event onTouch = new Vector2Event();
+    public UnityEvent onNoTouch = new UnityEvent();
+
     private List<GameObject> touchList = new List<GameObject>();
     private GameObject[] touchesOld;
     private RaycastHit rayHit;
+
+    private void Awake()
+    {
+        if(INSTANCE)
+        {
+            Destroy(this);
+        }
+        else
+        {
+            INSTANCE = this;
+        }
+    }
 
     // Update is called once per frame
     void Update () {
@@ -25,7 +47,7 @@ public class TouchControllScript : MonoBehaviour {
             
             Ray ray = GetComponent<Camera>().ScreenPointToRay(Input.mousePosition);
             Vector2 touchPos = GetComponent<Camera>().ScreenToWorldPoint(Input.mousePosition);
-
+            onTouch.Invoke(touchPos);
             if (Physics.Raycast(ray, out rayHit, touchInputMask))
             {
                 GameObject recipient = rayHit.transform.gameObject;
@@ -81,6 +103,10 @@ public class TouchControllScript : MonoBehaviour {
                 }
             }
         }
+        else
+        {
+            onNoTouch?.Invoke();
+        }
 #endif
 
         if (Input.touchCount > 0)
@@ -119,6 +145,7 @@ public class TouchControllScript : MonoBehaviour {
                     }
                 }
                 Vector2 touchPos = GetComponent<Camera>().ScreenToWorldPoint(touch.position);
+                onTouch.Invoke(touchPos);
 
                 RaycastHit2D hit2D = Physics2D.CircleCast(touchPos, touchRange, Vector2.one, touchInputMask);
 
@@ -152,6 +179,10 @@ public class TouchControllScript : MonoBehaviour {
                     obj.SendMessage("OnTouchTouchExit", rayHit.point, SendMessageOptions.DontRequireReceiver);
                 }
             }
+        }
+        else if(!Application.isEditor)
+        {
+            onNoTouch?.Invoke();
         }
 	}
 }

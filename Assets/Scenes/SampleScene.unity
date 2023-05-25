@@ -325,7 +325,13 @@ MonoBehaviour:
   touchInputMask:
     serializedVersion: 2
     m_Bits: 2147483647
-  touchRange: 1
+  touchRange: 0.1
+  onTouch:
+    m_PersistentCalls:
+      m_Calls: []
+  onNoTouch:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &744696502
 GameObject:
   m_ObjectHideFlags: 0
