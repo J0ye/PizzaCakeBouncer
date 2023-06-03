@@ -3,16 +3,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameManager : MonoBehaviour
+public class DemoGameManager : MonoBehaviour
 {
-    public static GameManager INSTANCE;
+    public static DemoGameManager INSTANCE;
 
     public string playerPrefabName;
     public Vector2 xBounds = Vector2.zero;
     public Vector2 yBounds = Vector2.zero;
     public int margin = 1;
-
-    private PositionList positionList;
+ 
+    private PositionList positionList; // PositionList is a custom class I created to manage position in a 2D space
 
     private void Start()
     {

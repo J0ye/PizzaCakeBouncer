@@ -3,18 +3,18 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-[System.Serializable]
-public class Vector2Event : UnityEvent<Vector2> { }
-
+/// <summary>
+/// Should be a component of the maincamera object. Sends and invokes events and methodes based on Input.touch. Handles OnTouchDown, -Up, -Stay and -Exit. Targets need TouchObjetScript for interaction.
+/// This script is SINGELTON. Only one per scene.
+/// </summary>
 public class TouchControllScript : MonoBehaviour 
 {
-
     public static TouchControllScript INSTANCE;
 
     public LayerMask touchInputMask;
     public float touchRange = 1f;
 
-    public Vector2Event onTouch = new Vector2Event();
+    public UnityEvent<Vector2> onTouch = new UnityEvent<Vector2>();
     public UnityEvent onNoTouch = new UnityEvent();
 
     private List<GameObject> touchList = new List<GameObject>();
@@ -33,18 +33,20 @@ public class TouchControllScript : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
     void Update () {
-
+        // Handle editor input
+        // Input in editor is made with the left mouse button but triggers same events as touch on device
 #if UNITY_EDITOR
         if (Input.GetMouseButton(0) || Input.GetMouseButtonDown(0) || Input.GetMouseButtonUp(0))
         {
+            // Process previous touches
+            // To handle 'OnTouchExit' events
             touchesOld = new GameObject[touchList.Count];
             touchList.CopyTo(touchesOld);
             touchList.Clear();
 
-
-            
+            // 3D
+            // Use ray to check for 3D objects in line with touch
             Ray ray = GetComponent<Camera>().ScreenPointToRay(Input.mousePosition);
             Vector2 touchPos = GetComponent<Camera>().ScreenToWorldPoint(Input.mousePosition);
             onTouch.Invoke(touchPos);
@@ -70,6 +72,8 @@ public class TouchControllScript : MonoBehaviour
                 }
             }
 
+            //2D
+            // Use Circle cast to get 2D objects near touch
             RaycastHit2D hit2D = Physics2D.CircleCast(touchPos, touchRange, Vector2.one, touchInputMask);
 
             if(hit2D)
@@ -108,7 +112,7 @@ public class TouchControllScript : MonoBehaviour
             onNoTouch?.Invoke();
         }
 #endif
-
+        // This code is actually executed on device
         if (Input.touchCount > 0)
         {
             touchesOld = new GameObject[touchList.Count];
@@ -116,6 +120,7 @@ public class TouchControllScript : MonoBehaviour
             touchList.Clear();
             foreach (Touch touch in Input.touches)
             {
+                // 3D
                 Ray ray = GetComponent<Camera>().ScreenPointToRay(touch.position);
 
                 if (Physics.Raycast(ray, out rayHit, touchInputMask))
@@ -147,6 +152,7 @@ public class TouchControllScript : MonoBehaviour
                 Vector2 touchPos = GetComponent<Camera>().ScreenToWorldPoint(touch.position);
                 onTouch.Invoke(touchPos);
 
+                // 2D
                 RaycastHit2D hit2D = Physics2D.CircleCast(touchPos, touchRange, Vector2.one, touchInputMask);
 
                 if (hit2D)

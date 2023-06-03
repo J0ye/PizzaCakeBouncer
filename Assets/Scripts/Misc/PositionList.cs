@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// List of positions in a 2D space spaced a margin apart. Returns every position only once, unless to many positions requeted.
+/// </summary>
 public class PositionList
 {
     private List<Vector3> positions = new List<Vector3>();
@@ -35,6 +38,10 @@ public class PositionList
         return positions;
     }
 
+    /// <summary>
+    /// Use this to get positions from the list. Deletes the position afterwards so positions are not assigned TWICE.
+    /// </summary>
+    /// <returns></returns>
     public Vector3 GetRandomPosition()
     {
         if(positions.Count <= 0)

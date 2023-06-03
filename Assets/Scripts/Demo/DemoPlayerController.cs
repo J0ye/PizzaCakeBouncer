@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerController : MonoBehaviourPunCallbacks
+public class DemoPlayerController : MonoBehaviourPunCallbacks
 { 
     public List<Color> colors = new List<Color> {
         Color.red,

@@ -1,6 +1,9 @@
 ﻿using UnityEngine;
 using UnityEngine.Events;
 
+/// <summary>
+/// Event component on touch target gameobjects. Events get called by TouchControllScript 
+/// </summary>
 public class TouchObjectScript : MonoBehaviour {
 
     public UnityEvent onDown = new UnityEvent();

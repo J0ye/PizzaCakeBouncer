@@ -9,15 +9,20 @@ using System.Linq;
 
 
 /// <summary>
-/// Controls connecting and sessions. Does not care for any player specific functions
+/// Controls connecting and sessions. Does not care for any player specific functions. Connects to the lobby automatically and opens a new room if none is open yet.
+/// This script is SINGELTON. Only one per scene.
 /// </summary>
 public class ConncectionManager : MonoBehaviourPunCallbacks
 {
     public static ConncectionManager instance;
-    public bool writeStatusToConsole;
+    public bool createOrJoinRoomOnConnect = true;
 
+    [Header("Events")]
     public UnityEvent OnEnterRoom = new UnityEvent();
     public UnityEvent OnOtherPlayerEnterRoom = new UnityEvent();
+
+    [Header ("Debug")]
+    public bool writeStatusToConsole;
     public TextMeshProUGUI statusOutput;
     public List<int> playerIDs = new List<int>();
     public List<string> players = new List<string>();
@@ -34,7 +39,6 @@ public class ConncectionManager : MonoBehaviourPunCallbacks
         }
     }
 
-    // Start is called before the first frame update
     void Start()
     {
         WriteStatus("Connecting...");
@@ -42,7 +46,6 @@ public class ConncectionManager : MonoBehaviourPunCallbacks
         {
             WriteStatus("Not able to connect");
             Debug.LogError("Not able to connect");
-
         }
     }
 
@@ -60,6 +63,8 @@ public class ConncectionManager : MonoBehaviourPunCallbacks
         }
     }
 
+    #region connection events
+    // Called when device is online and game is connected to master server
     public override void OnConnectedToMaster()
     {
         PhotonNetwork.NickName = RandomValues.INSTANCE().GetRandomString();
@@ -67,11 +72,15 @@ public class ConncectionManager : MonoBehaviourPunCallbacks
         PhotonNetwork.JoinLobby();
     }
 
+    // Called when entered lobby
     public override void OnJoinedLobby()
     {
+        if (!createOrJoinRoomOnConnect) return;
+
         StartCoroutine(JoinStandardRoom());
     }
 
+    // Called when entered new game room
     public override void OnJoinedRoom()
     {
         WriteStatus("in room");
@@ -89,7 +98,12 @@ public class ConncectionManager : MonoBehaviourPunCallbacks
     {
         WritePlayerCount();
     }
+    #endregion
 
+    /// <summary>
+    /// Creates an artificial count down before joining or creating a new room.
+    /// </summary>
+    /// <returns>returns void</returns>
     private IEnumerator JoinStandardRoom()
     {
         WriteStatus("3");
@@ -101,7 +115,8 @@ public class ConncectionManager : MonoBehaviourPunCallbacks
         print("joining");
         PhotonNetwork.JoinRandomOrCreateRoom();
     }
-     
+
+    #region Debug and console functions
     private void WritePlayerCount()
     {
         string temp = "Room name: " + PhotonNetwork.CurrentRoom.Name;
@@ -117,12 +132,5 @@ public class ConncectionManager : MonoBehaviourPunCallbacks
         }
         if(writeStatusToConsole)Debug.Log(text);
     }
-}
-
-static class NewPhotonPlayerMethods
-{
-    public static void CallByName(this Player player)
-    {
-        Debug.Log("And before came " + player.NickName);
-    }
+    #endregion
 }
