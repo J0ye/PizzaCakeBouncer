@@ -19,6 +19,8 @@ public class ConncectionManager : MonoBehaviourPunCallbacks
 
     [Header("Events")]
     public UnityEvent OnEnterRoom = new UnityEvent();
+    public UnityEvent OnEnterRoomAsMaster = new UnityEvent();
+    public UnityEvent OnEnterRoomAsClient = new UnityEvent();
     public UnityEvent OnOtherPlayerEnterRoom = new UnityEvent();
 
     [Header ("Debug")]
@@ -84,7 +86,15 @@ public class ConncectionManager : MonoBehaviourPunCallbacks
     public override void OnJoinedRoom()
     {
         WriteStatus("in room");
-        OnEnterRoom.Invoke();       
+        OnEnterRoom.Invoke();
+        if(PhotonNetwork.IsMasterClient)
+        {
+            OnEnterRoomAsMaster.Invoke();
+        }
+        else
+        {
+            OnEnterRoomAsClient.Invoke();
+        }
         WritePlayerCount();
     }
 
@@ -121,6 +131,7 @@ public class ConncectionManager : MonoBehaviourPunCallbacks
     {
         string temp = "Room name: " + PhotonNetwork.CurrentRoom.Name;
         temp += "; Players: " + PhotonNetwork.CurrentRoom.PlayerCount;
+        if (PhotonNetwork.IsMasterClient) temp += "; I am Master.";
         WriteStatus(temp);
     }
 

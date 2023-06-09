@@ -30,7 +30,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4265866183198668156}
-  m_RootOrder: -1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &2669800464230842248
 SpriteRenderer:
@@ -115,7 +115,7 @@ Transform:
   m_Children:
   - {fileID: 1465327902536633388}
   m_Father: {fileID: 3469130667476559022}
-  m_RootOrder: -1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &7916077068489921861
 SpriteRenderer:
@@ -179,8 +179,10 @@ GameObject:
   m_Component:
   - component: {fileID: 3469130667476559022}
   - component: {fileID: -3515244182718658271}
+  - component: {fileID: 3052597746575632479}
+  - component: {fileID: 8860105291352900884}
   m_Layer: 0
-  m_Name: Default
+  m_Name: IceCream
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -215,13 +217,67 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   probability: 1
-  displayName: Default
+  displayName: Ice Cream
   availableColors:
-  - '#D57E7E'
-  - '#C6D57E'
-  - '#A2CDCD'
-  - '#FFE1AF'
+  - {r: 0.78039217, g: 0.8392157, b: 0.49803922, a: 1}
+  - {r: 0.8392157, g: 0.49803922, b: 0.49803922, a: 1}
+  - {r: 0.6392157, g: 0.80784315, b: 0.80784315, a: 1}
+  - {r: 1, g: 0.8862745, b: 0.6901961, a: 1}
   availableSprites:
-  - {fileID: 0}
+  - {fileID: 21300000, guid: e5528a2973239f34590edca400229c3d, type: 3}
+  - {fileID: 21300000, guid: b2f3be11078ca064c9057ed30a6a60b6, type: 3}
+  - {fileID: 21300000, guid: a1d835b3476c28349a68e45a78ba8844, type: 3}
+  - {fileID: 21300000, guid: cd4ca1e0642ef0e4fa8f0c54d07ea628, type: 3}
+  - {fileID: 21300000, guid: cd9f4554a3e35af49b128554a302458a, type: 3}
   backGround: {fileID: 7139433333237628045}
   cardSprite: {fileID: 6451784348243091238}
+--- !u!114 &3052597746575632479
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7442261947770286012}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d02034774ce7bb440a376d75712c6c8c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  onDown:
+    m_PersistentCalls:
+      m_Calls: []
+  onUp:
+    m_PersistentCalls:
+      m_Calls: []
+  onStay:
+    m_PersistentCalls:
+      m_Calls: []
+  onExit:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!61 &8860105291352900884
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7442261947770286012}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 4.2, y: 8}
+  m_EdgeRadius: 0

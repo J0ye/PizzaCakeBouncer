@@ -101,6 +101,12 @@ public class TouchControllScript : MonoBehaviour
 
             foreach (GameObject obj in touchesOld)
             {
+                if(obj == null)
+                {
+                    // cards can be destroyed without being removed from this list
+                    return;
+                }
+
                 if (!touchList.Contains(obj))
                 {
                     obj.SendMessage("OnTouchTouchExit", rayHit.point, SendMessageOptions.DontRequireReceiver);

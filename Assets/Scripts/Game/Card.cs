@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Unity.Collections;
 using UnityEngine;
 
+[RequireComponent(typeof(TouchObjectScript))]
 public class Card : MonoBehaviour
 {
     /// <summary>
@@ -18,29 +19,31 @@ public class Card : MonoBehaviour
     /// <summary>
     /// All available background colors
     /// </summary>
-    public string[] availableColors;
+    public List<Color> availableColors;
 
     /// <summary>
     /// All available sprites for the card type
     /// </summary>
     public Sprite[] availableSprites;
 
-    [SerializeField]
+    [SerializeField] //Why serialize this??
     private GameObject backGround;
-    [SerializeField]
+    [SerializeField] //Why serialize this??
     private GameObject cardSprite;
 
-    // Start is called before the first frame update
-    void Start()
+    private TouchObjectScript tos;
+
+    void Awake()
     {
         SetRandomSprite();
         SetRandomColor();
+        tos = GetComponent<TouchObjectScript>();
+        tos.onDown.AddListener(TouchCard);
     }
 
-    // Update is called once per frame
-    void Update()
+    public void TouchCard()
     {
-
+        GameController.instance.HandlePlayerInteraction();
     }
 
     /// <summary>
@@ -57,8 +60,11 @@ public class Card : MonoBehaviour
     /// </summary>
     public void SetRandomColor() 
     {
-        int randomIndex = Random.Range(0, availableColors.Length);
-        ColorUtility.TryParseHtmlString(availableColors[randomIndex], out Color color);
-        backGround.GetComponent<SpriteRenderer>().color = color;
+        int randomIndex = Random.Range(0, availableColors.Count);
+        backGround.GetComponent<SpriteRenderer>().color = availableColors[randomIndex];
+    }
+    public void SetColor(Color c)
+    {
+        backGround.GetComponent<SpriteRenderer>().color = c;
     }
 }

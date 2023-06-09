@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1830128020644919602}
   - component: {fileID: 465968511253654342}
+  - component: {fileID: 8141822828868632524}
   m_Layer: 0
   m_Name: GameController
   m_TagString: Untagged
@@ -44,8 +45,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e19111718fcb58446b4d3d855a1f7e9b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerPrefabName: Player
+  cardSpawnPosition: {x: 0, y: 0, z: 0}
+  gameState: 0
   cardTypes:
   - {fileID: -3515244182718658271, guid: db737791aae778c4e84cff2c057dccdc, type: 3}
   - {fileID: 11400000, guid: 3037c8576913626408a58fa2190a2831, type: 2}
   - {fileID: 11400000, guid: f1519033f64972e47aa143f98c86d4a8, type: 2}
+  timeBetweenCards: 3
+  timeAfterRoundEnd: 5
+--- !u!114 &8141822828868632524
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1757194319972631525}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents: []
+  sceneViewId: 0
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
