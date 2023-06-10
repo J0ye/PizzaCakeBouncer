@@ -47,12 +47,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardSpawnPosition: {x: 0, y: 0, z: 0}
   gameState: 0
+  gameInfoText: {fileID: 0}
   cardTypes:
-  - {fileID: -3515244182718658271, guid: db737791aae778c4e84cff2c057dccdc, type: 3}
-  - {fileID: 11400000, guid: 3037c8576913626408a58fa2190a2831, type: 2}
-  - {fileID: 11400000, guid: f1519033f64972e47aa143f98c86d4a8, type: 2}
-  timeBetweenCards: 3
-  timeAfterRoundEnd: 5
+  - {fileID: 5970375665864323713, guid: a3cbf60e07c2b05458106adff8ef341b, type: 3}
+  - {fileID: -3515244182718658271, guid: 3cc2a57171ada5240a46629ab7bb8ffa, type: 3}
+  - {fileID: -3515244182718658271, guid: aaf07057f77ad864b8332c74f47bf4d0, type: 3}
+  - {fileID: -3515244182718658271, guid: f26310be1d4c1d04aa1260b4cbe6a95d, type: 3}
+  timeBetweenCards: 2
+  timeForVictory: 3
+  timeAfterRoundEnd: 3
 --- !u!114 &8141822828868632524
 MonoBehaviour:
   m_ObjectHideFlags: 0
