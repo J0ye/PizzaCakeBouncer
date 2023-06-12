@@ -16,9 +16,10 @@ public class GameController : MonoBehaviourPun
     private int timeBetweenCards = 3;
     [Tooltip("How long the game is paused if a player touches a wanted card")]
     [SerializeField]
-    private float timeForVictory= 3;
+    private float timeForVictory = 3;
+    [Tooltip("Determines how many cards are drawn until the game is over.")]
     [SerializeField]
-    private int timeAfterRoundEnd = 5;
+    private int deckSize = 5;
 
     /// <summary>
     /// The card that is currently wanted
@@ -29,8 +30,12 @@ public class GameController : MonoBehaviourPun
     /// Card that is currently in play
     /// </summary>
     private GameObject currentCardInPlay;
-    private int points = 0;
     private float cardTimer = 0f;
+    private int points = 0;
+    /// <summary>
+    /// Increases everytime a new card is drawn. Reset at the beginning of a game.
+    /// </summary>
+    private int cardsDrawnCounter = 0;
     private bool isPlaying = false;
 
     private void Start()
@@ -66,12 +71,6 @@ public class GameController : MonoBehaviourPun
                         if (cardTimer >= timeBetweenCards)
                         {
                             ServerSpawnNextCard();
-                        }
-                        break;
-                    case GameState.WaitingForNextRound:
-                        if (cardTimer >= timeAfterRoundEnd)
-                        {
-                            RestartRound();
                         }
                         break;
                 }
@@ -114,7 +113,7 @@ public class GameController : MonoBehaviourPun
         }
         else
         {
-            // Game has already been halted, other player touched wanted card
+            // Game has already been halted, other player touched wanted card first
             currentCard.SetColor(Color.grey);
             WriteToGameInfo("You Are Too Late");
         }
@@ -130,6 +129,15 @@ public class GameController : MonoBehaviourPun
             // Continue game after t
             Invoke(nameof(ContinueGame), timeForVictory);
         }
+    }
+
+    /// <summary>
+    /// Called while spawning a new card.
+    /// </summary>
+    [PunRPC]
+    public void EndGame()
+    {
+
     }
 
     /// <summary>
@@ -175,13 +183,13 @@ public class GameController : MonoBehaviourPun
         if (PhotonNetwork.IsMasterClient)
         {
             int randomIndex = Random.Range(0, cardTypes.Length); // Get Random card
-            photonView.RPC(nameof(RpcSpawnCardWithoutCycle), RpcTarget.All, randomIndex); // Call everybody to discard old card and draw new
+            photonView.RPC(nameof(RpcSpawnCardWithoutCycle), RpcTarget.All, randomIndex); // Call everybody to draw first and set wanted to 0
         }
         else
         {
-            // if client, ask master to spawn new card
-            photonView.RPC(nameof(RequestSpawnCard), RpcTarget.MasterClient);
+            // Do nothing if client
         }
+
     }
 
     /// <summary>
@@ -198,8 +206,7 @@ public class GameController : MonoBehaviourPun
         }
         else
         {
-            // if client, ask master to spawn new card
-            photonView.RPC(nameof(RequestSpawnCard), RpcTarget.MasterClient);
+            // Do nothing if client
         }
     }
 
@@ -224,9 +231,16 @@ public class GameController : MonoBehaviourPun
 
     private void SpawnCard(int cardIndex)
     {
+        if(cardsDrawnCounter >= deckSize)
+        {
+            EndGame();
+            return;
+        }
+
         cardTimer = 0; // New card, new time
         Destroy(currentCardInPlay);
         currentCardInPlay = Instantiate(cardTypes[cardIndex].gameObject, cardSpawnPosition, Quaternion.identity);
+        cardsDrawnCounter++;
     }
 
     /// <summary>
