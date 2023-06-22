@@ -28,7 +28,7 @@ public class Card : MonoBehaviour
 
     [SerializeField] //Why serialize this??
     private GameObject backGround;
-    [SerializeField] //Why serialize this??
+    [SerializeField] //Why serialize this?? Because we are attching it in the inspector. Not sure if there is a better way
     private GameObject cardSprite;
 
     private TouchObjectScript tos;
@@ -49,7 +49,7 @@ public class Card : MonoBehaviour
     /// <summary>
     /// Sets a random background color for the current card
     /// </summary>
-    public void SetRandomSprite()
+    public void GetRandomSpriteIndex()
     {
         int randomIndex = Random.Range(0, availableSprites.Length);
         cardSprite.GetComponent<SpriteRenderer>().sprite = availableSprites[randomIndex];
@@ -58,7 +58,7 @@ public class Card : MonoBehaviour
     /// <summary>
     /// Sets a random background color for the current card
     /// </summary>
-    public void SetRandomColor() 
+    public void GetRandomColor() 
     {
         int randomIndex = Random.Range(0, availableColors.Count);
         backGround.GetComponent<SpriteRenderer>().color = availableColors[randomIndex];

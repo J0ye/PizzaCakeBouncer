@@ -2,7 +2,9 @@ using Photon.Pun;
 using UnityEngine;
 using System.Collections;
 using TMPro;
-public class GameController : MonoBehaviourPun
+using Mirror;
+
+public class GameController : NetworkBehaviour
 {
     public static GameController instance;
 
@@ -31,7 +33,6 @@ public class GameController : MonoBehaviourPun
     private GameObject currentCardInPlay;
     private int points = 0;
     private float cardTimer = 0f;
-    private bool isPlaying = false;
 
     private void Start()
     {
@@ -44,42 +45,42 @@ public class GameController : MonoBehaviourPun
             instance = this;
         }
         WriteGameStatus();
+
     }
 
     public void StartGame()
     {
-        // Start new Game
-        photonView.RPC(nameof(RestartRound), RpcTarget.All);
+
     }
 
     private void Update()
     {
-        if(isPlaying)
+        cardTimer += Time.deltaTime;
+        if (isServer)
         {
-            cardTimer += Time.deltaTime; 
-            // Only the master client controls the game loop
-            if (PhotonNetwork.IsMasterClient && isPlaying)
-            {
-                switch (gameState)
-                {
-                    case GameState.CyclingCards:
-                        if (cardTimer >= timeBetweenCards)
-                        {
-                            ServerSpawnNextCard();
-                        }
-                        break;
-                    case GameState.WaitingForNextRound:
-                        if (cardTimer >= timeAfterRoundEnd)
-                        {
-                            RestartRound();
-                        }
-                        break;
-                }
-
-            }
+            GameLoop();
         }
+    }
 
-       
+    [Server]
+    private void GameLoop()
+    {
+        // Only the master client controls the game loop
+        switch (gameState)
+        {
+            case GameState.CyclingCards:
+                if (cardTimer >= timeBetweenCards)
+                {
+                    ServerSpawnNextCard();
+                }
+                break;
+            case GameState.WaitingForNextRound:
+                if (cardTimer >= timeAfterRoundEnd)
+                {
+                    ServerSpawnNextCard();
+                }
+                break;
+        }
     }
 
     /// <summary>
@@ -90,74 +91,26 @@ public class GameController : MonoBehaviourPun
     {
         Card currentCard = currentCardInPlay.GetComponent<Card>();
         // I think we need something better than to compare names. Works for now
-        if (currentCard.displayName == GetWantedCard().displayName && isPlaying)
+        if (currentCard.displayName == GetWantedCard().displayName)
         {
             // wanted card is equal to current card in play
             points++;
             WriteToGameInfo("Yes, Good Job.");
             currentCard.SetColor(Color.green);
-            if (PhotonNetwork.IsMasterClient)
-            {
-                HaltGame();
-            }
-            else
-            {
-                photonView.RPC(nameof(HaltGame), RpcTarget.MasterClient); // ask master to pause game so no new cards are spawned
-            }
         }
-        else if(isPlaying)
+        else
         {
             // Checked card but it was wrong
             points--;
             currentCard.SetColor(Color.red);
             WriteToGameInfo("Nope, Wrong Card");
         }
-        else
-        {
-            // Game has already been halted, other player touched wanted card
-            currentCard.SetColor(Color.grey);
-            WriteToGameInfo("You Are Too Late");
-        }
-    }
-
-    [PunRPC]
-    public void HaltGame()
-    {
-        if (PhotonNetwork.IsMasterClient)
-        {
-            // Pause game for everyone
-            photonView.RPC(nameof(RPCSetIsPlaying), RpcTarget.All, false);
-            // Continue game after t
-            Invoke(nameof(ContinueGame), timeForVictory);
-        }
-    }
-
-    /// <summary>
-    /// Called by non-master clients to ask the master to spawn a new card.
-    /// </summary>
-    [PunRPC]
-    public void RequestSpawnCard()
-    {
-        ServerSpawnNextCard();
-    }
-
-    [PunRPC]
-    public void RestartRound()
-    {
-        if (PhotonNetwork.IsMasterClient)
-        {
-            ServerSpawnFirstCard();
-        }
-        isPlaying = true;
-        wantedCardIndex = 0;
-        WriteGameStatus();
-    }
-
-    public void ContinueGame()
-    {
-        // Continue game for everyone
-        photonView.RPC(nameof(RPCSetIsPlaying), RpcTarget.All, true);
-        ServerSpawnNextCard();
+        //else
+        //{
+        //    // Game has already been halted, other player touched wanted card
+        //    currentCard.SetColor(Color.grey);
+        //    WriteToGameInfo("You Are Too Late");
+        //}
     }
 
     #region card logic
@@ -170,37 +123,15 @@ public class GameController : MonoBehaviourPun
         return cardTypes[wantedCardIndex];
     }
 
-    public void ServerSpawnFirstCard()
-    {
-        if (PhotonNetwork.IsMasterClient)
-        {
-            int randomIndex = Random.Range(0, cardTypes.Length); // Get Random card
-            photonView.RPC(nameof(RpcSpawnCardWithoutCycle), RpcTarget.All, randomIndex); // Call everybody to discard old card and draw new
-        }
-        else
-        {
-            // if client, ask master to spawn new card
-            photonView.RPC(nameof(RequestSpawnCard), RpcTarget.MasterClient);
-        }
-    }
-
     /// <summary>
     /// Grabs a random card and displays it for the players to tap on.
     /// Card probability is weighted by the amount in the card scriptable object.
     /// Also adds to wantedCardIndex
     /// </summary>
     public void ServerSpawnNextCard()
-    {   
-        if(PhotonNetwork.IsMasterClient)
-        {
-            int randomIndex = Random.Range(0, cardTypes.Length); // Get Random card
-            photonView.RPC(nameof(RpcSpawnCard), RpcTarget.All, randomIndex); // Call everybody to discard old card and draw new
-        }
-        else
-        {
-            // if client, ask master to spawn new card
-            photonView.RPC(nameof(RequestSpawnCard), RpcTarget.MasterClient);
-        }
+    {
+        int randomIndex = Random.Range(0, cardTypes.Length); // Get Random card
+        RpcSpawnCard(randomIndex);
     }
 
     /// <summary>
@@ -208,18 +139,11 @@ public class GameController : MonoBehaviourPun
     /// RPCSpawnCard instead of Photon.Instaniate so Destroy(CurrentCard) happens on each instance.
     /// </summary>
     /// <param name="cardIndex"></param>
-    [PunRPC]
+    [ClientRpc]
     public void RpcSpawnCard(int cardIndex)
     {
         SpawnCard(cardIndex);
-
         CycleWantedCard();
-    }
-
-    [PunRPC]
-    public void RpcSpawnCardWithoutCycle(int cardIndex)
-    {
-        SpawnCard(cardIndex);
     }
 
     private void SpawnCard(int cardIndex)
@@ -243,12 +167,6 @@ public class GameController : MonoBehaviourPun
         WriteGameStatus();
     }
     #endregion
-
-    [PunRPC]
-    public void RPCSetIsPlaying(bool newState)
-    {
-        isPlaying = newState;
-    }
 
     #region Game Status
     private void WriteGameStatus()
