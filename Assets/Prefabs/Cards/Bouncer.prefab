@@ -231,6 +231,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 7d62909b925266d40b101f59c17fa5cc, type: 3}
   - {fileID: 21300000, guid: ec7fdc8f338e34f459859a3859492e08, type: 3}
   - {fileID: 21300000, guid: ee4e2b3b03da5ca4e9e48b57f480d08e, type: 3}
+  animationDuration: 0.1
   backGround: {fileID: 7139433333237628045}
   cardSprite: {fileID: 6451784348243091238}
 --- !u!114 &3052597746575632479

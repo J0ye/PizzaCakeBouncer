@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1001 &2156187396896553888
+--- !u!1001 &6499606848902254054
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -10,99 +10,47 @@ PrefabInstance:
     - target: {fileID: -3515244182718658271, guid: 21f4fd8d80fc917479a4e58fb408a4cd, type: 3}
       propertyPath: backGround
       value: 
-      objectReference: {fileID: 9149077800882751277}
+      objectReference: {fileID: 4118367262060441963}
     - target: {fileID: -3515244182718658271, guid: 21f4fd8d80fc917479a4e58fb408a4cd, type: 3}
       propertyPath: cardSprite
       value: 
-      objectReference: {fileID: 4928352711373825158}
+      objectReference: {fileID: 268644022379582144}
     - target: {fileID: -3515244182718658271, guid: 21f4fd8d80fc917479a4e58fb408a4cd, type: 3}
       propertyPath: displayName
-      value: Pizza
+      value: Bouncer
       objectReference: {fileID: 0}
     - target: {fileID: -3515244182718658271, guid: 21f4fd8d80fc917479a4e58fb408a4cd, type: 3}
       propertyPath: availableSprites.Array.size
-      value: 3
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: -3515244182718658271, guid: 21f4fd8d80fc917479a4e58fb408a4cd, type: 3}
       propertyPath: availableSprites.Array.data[0]
       value: 
-      objectReference: {fileID: 21300000, guid: 51246ff7ccfdc6444a931c78eeb5efea, type: 3}
+      objectReference: {fileID: 21300000, guid: 6e9f38bc93841ea49ba6b8f99db887a1, type: 3}
     - target: {fileID: -3515244182718658271, guid: 21f4fd8d80fc917479a4e58fb408a4cd, type: 3}
       propertyPath: availableSprites.Array.data[1]
       value: 
-      objectReference: {fileID: 21300000, guid: 392b2096b823bb64bab96136f21c009c, type: 3}
+      objectReference: {fileID: 21300000, guid: b4240e0e4353393408b88dafc6b35090, type: 3}
     - target: {fileID: -3515244182718658271, guid: 21f4fd8d80fc917479a4e58fb408a4cd, type: 3}
       propertyPath: availableSprites.Array.data[2]
       value: 
-      objectReference: {fileID: 21300000, guid: c2ffb85bd02bf9c4b89810c93ca86c39, type: 3}
+      objectReference: {fileID: 21300000, guid: 187b2cbe3150e694aaa4bbe4e62fe5d3, type: 3}
     - target: {fileID: -3515244182718658271, guid: 21f4fd8d80fc917479a4e58fb408a4cd, type: 3}
-      propertyPath: availableColors.Array.data[0].a
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: -3515244182718658271, guid: 21f4fd8d80fc917479a4e58fb408a4cd, type: 3}
-      propertyPath: availableColors.Array.data[0].b
-      value: 0.49803922
-      objectReference: {fileID: 0}
-    - target: {fileID: -3515244182718658271, guid: 21f4fd8d80fc917479a4e58fb408a4cd, type: 3}
-      propertyPath: availableColors.Array.data[0].g
-      value: 0.8392157
-      objectReference: {fileID: 0}
-    - target: {fileID: -3515244182718658271, guid: 21f4fd8d80fc917479a4e58fb408a4cd, type: 3}
-      propertyPath: availableColors.Array.data[0].r
-      value: 0.78039217
-      objectReference: {fileID: 0}
-    - target: {fileID: -3515244182718658271, guid: 21f4fd8d80fc917479a4e58fb408a4cd, type: 3}
-      propertyPath: availableColors.Array.data[1].a
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: -3515244182718658271, guid: 21f4fd8d80fc917479a4e58fb408a4cd, type: 3}
-      propertyPath: availableColors.Array.data[1].b
-      value: 0.49803922
-      objectReference: {fileID: 0}
-    - target: {fileID: -3515244182718658271, guid: 21f4fd8d80fc917479a4e58fb408a4cd, type: 3}
-      propertyPath: availableColors.Array.data[1].g
-      value: 0.49803922
-      objectReference: {fileID: 0}
-    - target: {fileID: -3515244182718658271, guid: 21f4fd8d80fc917479a4e58fb408a4cd, type: 3}
-      propertyPath: availableColors.Array.data[1].r
-      value: 0.8392157
-      objectReference: {fileID: 0}
-    - target: {fileID: -3515244182718658271, guid: 21f4fd8d80fc917479a4e58fb408a4cd, type: 3}
-      propertyPath: availableColors.Array.data[2].a
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: -3515244182718658271, guid: 21f4fd8d80fc917479a4e58fb408a4cd, type: 3}
-      propertyPath: availableColors.Array.data[2].b
-      value: 0.80784315
-      objectReference: {fileID: 0}
-    - target: {fileID: -3515244182718658271, guid: 21f4fd8d80fc917479a4e58fb408a4cd, type: 3}
-      propertyPath: availableColors.Array.data[2].g
-      value: 0.80784315
-      objectReference: {fileID: 0}
-    - target: {fileID: -3515244182718658271, guid: 21f4fd8d80fc917479a4e58fb408a4cd, type: 3}
-      propertyPath: availableColors.Array.data[2].r
-      value: 0.6392157
-      objectReference: {fileID: 0}
-    - target: {fileID: -3515244182718658271, guid: 21f4fd8d80fc917479a4e58fb408a4cd, type: 3}
-      propertyPath: availableColors.Array.data[3].a
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: -3515244182718658271, guid: 21f4fd8d80fc917479a4e58fb408a4cd, type: 3}
-      propertyPath: availableColors.Array.data[3].b
-      value: 0.6901961
-      objectReference: {fileID: 0}
-    - target: {fileID: -3515244182718658271, guid: 21f4fd8d80fc917479a4e58fb408a4cd, type: 3}
-      propertyPath: availableColors.Array.data[3].g
-      value: 0.8862745
-      objectReference: {fileID: 0}
-    - target: {fileID: -3515244182718658271, guid: 21f4fd8d80fc917479a4e58fb408a4cd, type: 3}
-      propertyPath: availableColors.Array.data[3].r
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2669800464230842248, guid: 21f4fd8d80fc917479a4e58fb408a4cd, type: 3}
-      propertyPath: m_Sprite
+      propertyPath: availableSprites.Array.data[3]
       value: 
-      objectReference: {fileID: 21300000, guid: 51246ff7ccfdc6444a931c78eeb5efea, type: 3}
+      objectReference: {fileID: 21300000, guid: 239544b96bdca784d91e350f86f28e26, type: 3}
+    - target: {fileID: -3515244182718658271, guid: 21f4fd8d80fc917479a4e58fb408a4cd, type: 3}
+      propertyPath: availableSprites.Array.data[4]
+      value: 
+      objectReference: {fileID: 21300000, guid: 7d62909b925266d40b101f59c17fa5cc, type: 3}
+    - target: {fileID: -3515244182718658271, guid: 21f4fd8d80fc917479a4e58fb408a4cd, type: 3}
+      propertyPath: availableSprites.Array.data[5]
+      value: 
+      objectReference: {fileID: 21300000, guid: ec7fdc8f338e34f459859a3859492e08, type: 3}
+    - target: {fileID: -3515244182718658271, guid: 21f4fd8d80fc917479a4e58fb408a4cd, type: 3}
+      propertyPath: availableSprites.Array.data[6]
+      value: 
+      objectReference: {fileID: 21300000, guid: ee4e2b3b03da5ca4e9e48b57f480d08e, type: 3}
     - target: {fileID: 3469130667476559022, guid: 21f4fd8d80fc917479a4e58fb408a4cd, type: 3}
       propertyPath: m_RootOrder
       value: 0
@@ -149,29 +97,29 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7442261947770286012, guid: 21f4fd8d80fc917479a4e58fb408a4cd, type: 3}
       propertyPath: m_Name
-      value: Pizza
+      value: Bouncer Variant
       objectReference: {fileID: 0}
     - target: {fileID: 7916077068489921861, guid: 21f4fd8d80fc917479a4e58fb408a4cd, type: 3}
       propertyPath: m_Color.b
-      value: 0.49803922
+      value: 0.21529014
       objectReference: {fileID: 0}
     - target: {fileID: 7916077068489921861, guid: 21f4fd8d80fc917479a4e58fb408a4cd, type: 3}
       propertyPath: m_Color.g
-      value: 0.8392157
+      value: 0.6113821
       objectReference: {fileID: 0}
     - target: {fileID: 7916077068489921861, guid: 21f4fd8d80fc917479a4e58fb408a4cd, type: 3}
       propertyPath: m_Color.r
-      value: 0.78039217
+      value: 0.7735849
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 21f4fd8d80fc917479a4e58fb408a4cd, type: 3}
---- !u!1 &4928352711373825158 stripped
+--- !u!1 &268644022379582144 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 6451784348243091238, guid: 21f4fd8d80fc917479a4e58fb408a4cd, type: 3}
-  m_PrefabInstance: {fileID: 2156187396896553888}
+  m_PrefabInstance: {fileID: 6499606848902254054}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &9149077800882751277 stripped
+--- !u!1 &4118367262060441963 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7139433333237628045, guid: 21f4fd8d80fc917479a4e58fb408a4cd, type: 3}
-  m_PrefabInstance: {fileID: 2156187396896553888}
+  m_PrefabInstance: {fileID: 6499606848902254054}
   m_PrefabAsset: {fileID: 0}

@@ -2,6 +2,8 @@ using Photon.Pun;
 using UnityEngine;
 using System.Collections;
 using TMPro;
+using System.Collections.Generic;
+
 public class GameController : MonoBehaviourPun
 {
     public static GameController instance;
@@ -38,6 +40,8 @@ public class GameController : MonoBehaviourPun
     private int cardsDrawnCounter = 0;
     private bool isPlaying = false;
 
+    private List<Card> pile = new List<Card>(); 
+
     private void Start()
     {
         if(instance)
@@ -54,7 +58,16 @@ public class GameController : MonoBehaviourPun
     public void StartGame()
     {
         // Start new Game
-        photonView.RPC(nameof(RestartRound), RpcTarget.All);
+        if(PhotonNetwork.IsConnectedAndReady)
+        {
+            photonView.RPC(nameof(RestartRound), RpcTarget.All);
+        }
+        else
+        {
+            // Game is offline. Start game solo for testing
+            print("Offline Game");
+            RestartRound();
+        }
     }
 
     private void Update()
@@ -63,7 +76,7 @@ public class GameController : MonoBehaviourPun
         {
             cardTimer += Time.deltaTime; 
             // Only the master client controls the game loop
-            if (PhotonNetwork.IsMasterClient && isPlaying)
+            if ((PhotonNetwork.IsMasterClient || !PhotonNetwork.IsConnected) && isPlaying)
             {
                 switch (gameState)
                 {
@@ -74,11 +87,8 @@ public class GameController : MonoBehaviourPun
                         }
                         break;
                 }
-
             }
-        }
-
-       
+        }       
     }
 
     /// <summary>
@@ -95,7 +105,9 @@ public class GameController : MonoBehaviourPun
             points++;
             WriteToGameInfo("Yes, Good Job.");
             currentCard.SetColor(Color.green);
-            if (PhotonNetwork.IsMasterClient)
+            currentCard.Invoke(nameof(Card.PlayTakeCardAnimation), timeForVictory);
+            currentCardInPlay = null; // Remove card from play, so it isnt add to pile.
+            if (PhotonNetwork.IsMasterClient || !PhotonNetwork.IsConnectedAndReady)
             {
                 HaltGame();
             }
@@ -126,9 +138,14 @@ public class GameController : MonoBehaviourPun
         {
             // Pause game for everyone
             photonView.RPC(nameof(RPCSetIsPlaying), RpcTarget.All, false);
-            // Continue game after t
-            Invoke(nameof(ContinueGame), timeForVictory);
         }
+        else if(!PhotonNetwork.IsConnectedAndReady)
+        {
+            // offline solution
+            isPlaying = false;
+        }
+        // Continue game after t
+        Invoke(nameof(ContinueGame), timeForVictory);
     }
 
     /// <summary>
@@ -137,7 +154,7 @@ public class GameController : MonoBehaviourPun
     [PunRPC]
     public void EndGame()
     {
-
+        WriteToGameInfo("GAME OVER");
     }
 
     /// <summary>
@@ -152,7 +169,7 @@ public class GameController : MonoBehaviourPun
     [PunRPC]
     public void RestartRound()
     {
-        if (PhotonNetwork.IsMasterClient)
+        if (PhotonNetwork.IsMasterClient || !PhotonNetwork.IsConnected)
         {
             ServerSpawnFirstCard();
         }
@@ -163,8 +180,16 @@ public class GameController : MonoBehaviourPun
 
     public void ContinueGame()
     {
-        // Continue game for everyone
-        photonView.RPC(nameof(RPCSetIsPlaying), RpcTarget.All, true);
+        if(PhotonNetwork.IsConnectedAndReady)
+        {
+            // Continue game for everyone
+            photonView.RPC(nameof(RPCSetIsPlaying), RpcTarget.All, true);
+        }
+        else
+        {
+            isPlaying = true;
+        }
+        StartCoroutine(RemovePile());
         ServerSpawnNextCard();
     }
 
@@ -180,6 +205,13 @@ public class GameController : MonoBehaviourPun
 
     public void ServerSpawnFirstCard()
     {
+        if(!PhotonNetwork.IsConnectedAndReady)
+        {
+            //offline solution
+            int randomIndex = Random.Range(0, cardTypes.Length); // Get Random card
+            RpcSpawnCardWithoutCycle(randomIndex);
+        }
+
         if (PhotonNetwork.IsMasterClient)
         {
             int randomIndex = Random.Range(0, cardTypes.Length); // Get Random card
@@ -198,8 +230,15 @@ public class GameController : MonoBehaviourPun
     /// Also adds to wantedCardIndex
     /// </summary>
     public void ServerSpawnNextCard()
-    {   
-        if(PhotonNetwork.IsMasterClient)
+    {
+        if (!PhotonNetwork.IsConnectedAndReady)
+        {
+            //offline solution
+            int randomIndex = Random.Range(0, cardTypes.Length); // Get Random card
+            RpcSpawnCard(randomIndex);
+        }
+
+        if (PhotonNetwork.IsMasterClient)
         {
             int randomIndex = Random.Range(0, cardTypes.Length); // Get Random card
             photonView.RPC(nameof(RpcSpawnCard), RpcTarget.All, randomIndex); // Call everybody to discard old card and draw new
@@ -231,16 +270,38 @@ public class GameController : MonoBehaviourPun
 
     private void SpawnCard(int cardIndex)
     {
-        if(cardsDrawnCounter >= deckSize)
+        cardTimer = 0; // New card, new time
+        if (currentCardInPlay != null)
+        {
+            pile.Add(currentCardInPlay.GetComponent<Card>()); // Add card to discard pile
+            pile[pile.Count - 1].SetUnInteractable(); // Deactivate interaction with card
+            currentCardInPlay.transform.position = currentCardInPlay.transform.position
+                - Vector3.back * pile.Count;
+        }
+        currentCardInPlay = Instantiate(cardTypes[cardIndex].gameObject, cardSpawnPosition, Quaternion.identity);
+        cardsDrawnCounter++;
+        if (cardsDrawnCounter >= deckSize)
         {
             EndGame();
             return;
         }
+    }
 
-        cardTimer = 0; // New card, new time
-        Destroy(currentCardInPlay);
-        currentCardInPlay = Instantiate(cardTypes[cardIndex].gameObject, cardSpawnPosition, Quaternion.identity);
-        cardsDrawnCounter++;
+    private IEnumerator RemovePile()
+    {
+        float timeBetweenMoves = 0.04f;
+        foreach(Card c in pile)
+        {
+            c.PlayDiscardAnimation();
+            yield return new WaitForSeconds(timeBetweenMoves);
+        }
+        float tempT = Mathf.Clamp(timeForVictory - timeBetweenMoves * pile.Count, 0f, timeForVictory);
+        yield return new WaitForSeconds(tempT);
+        foreach(Card c in pile)
+        {
+            Destroy(c.gameObject);
+        }
+        pile.Clear();
     }
 
     /// <summary>

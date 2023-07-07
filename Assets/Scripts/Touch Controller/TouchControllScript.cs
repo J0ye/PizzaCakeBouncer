@@ -11,6 +11,7 @@ public class TouchControllScript : MonoBehaviour
 {
     public static TouchControllScript INSTANCE;
 
+    [Tooltip("Used to check touch only on certain obejcts and layers.")]
     public LayerMask touchInputMask;
     public float touchRange = 1f;
 
