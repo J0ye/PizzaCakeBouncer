@@ -1,3 +1,4 @@
+using Mirror;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -35,12 +36,19 @@ public class RoomUIController : MonoBehaviour
 
     public void UpdateRoomPlayers()
     {
+        Debug.Log("Update room players");
+        //delete old entries
+        foreach (Transform child in playerPanel.transform)
+        {
+            Destroy(child.gameObject);
+        }
+
         CustomNetworkRoomManager nw = CustomNetworkRoomManager.singleton as CustomNetworkRoomManager;
         foreach (var slot in nw.roomSlots)
         {
             var player = Instantiate(roomPlayerPrefab, playerPanel.transform);
             // Rename the player
-            player.transform.Find("PlayerText").GetComponent<TMP_Text>().text = "Player" + slot.index;
+            player.transform.Find("PlayerText").GetComponent<TMP_Text>().text = "Player" + (slot.index + 1);
         }
     }
 }

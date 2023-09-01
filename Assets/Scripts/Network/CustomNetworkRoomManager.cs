@@ -5,13 +5,15 @@ using UnityEngine;
 
 public class CustomNetworkRoomManager : NetworkRoomManager
 {
-    public override void OnRoomServerAddPlayer(NetworkConnectionToClient conn)
-    {
-        RoomUIController.instance.UpdateRoomPlayers();
-    }
+    //public override GameObject OnRoomServerCreateRoomPlayer(NetworkConnectionToClient conn)
+    //{
+    //    RoomUIController.instance.UpdateRoomPlayers();
 
-    public override void OnRoomServerDisconnect(NetworkConnectionToClient conn)
-    {
-        RoomUIController.instance.UpdateRoomPlayers();
-    }
+    //    return null;
+    //}
+
+    //public override void OnRoomServerDisconnect(NetworkConnectionToClient conn)
+    //{
+    //    RoomUIController.instance.UpdateRoomPlayers();
+    //}
 }
