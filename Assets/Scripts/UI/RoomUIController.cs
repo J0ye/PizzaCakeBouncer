@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -32,8 +33,14 @@ public class RoomUIController : MonoBehaviour
         
     }
 
-    void AddRoomPlayer(string name)
+    public void UpdateRoomPlayers()
     {
-        Instantiate(roomPlayerPrefab, playerPanel.transform);
+        CustomNetworkRoomManager nw = CustomNetworkRoomManager.singleton as CustomNetworkRoomManager;
+        foreach (var slot in nw.roomSlots)
+        {
+            var player = Instantiate(roomPlayerPrefab, playerPanel.transform);
+            // Rename the player
+            player.transform.Find("PlayerText").GetComponent<TMP_Text>().text = "Player" + slot.index;
+        }
     }
 }

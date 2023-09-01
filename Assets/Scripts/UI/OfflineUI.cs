@@ -18,8 +18,8 @@ public class OfflineUI : MonoBehaviour
     public void JoinGame()
     {
         GameObject ipAddressGO = joinPanel.transform.Find("IPAddress").gameObject;
-        Uri uri = new Uri(ipAddressGO.GetComponent<TMP_InputField>().text);
-        NetworkManager.singleton.StartClient(uri);
+        NetworkManager.singleton.networkAddress = ipAddressGO.GetComponent<TMP_InputField>().text;
+        NetworkManager.singleton.StartClient();
     }
 
     public void ViewJoinGameUI()
