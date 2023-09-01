@@ -35,8 +35,8 @@ public class Card : MonoBehaviour
 
     void Awake()
     {
-        SetRandomSprite();
-        SetRandomColor();
+        //SetRandomSprite();
+        //SetRandomColor();
         tos = GetComponent<TouchObjectScript>();
         tos.onDown.AddListener(TouchCard);
     }

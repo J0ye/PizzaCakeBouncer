@@ -611,5 +611,9 @@ PrefabInstance:
       propertyPath: transport
       value: 
       objectReference: {fileID: 469623638}
+    - target: {fileID: 7259712279716757417, guid: aba08db2f5313e640bd4e4a63ad6a2f7, type: 3}
+      propertyPath: offlineScene
+      value: Assets/Scenes/Offline.unity
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: aba08db2f5313e640bd4e4a63ad6a2f7, type: 3}
