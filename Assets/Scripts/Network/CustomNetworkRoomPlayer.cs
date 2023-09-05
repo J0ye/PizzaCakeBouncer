@@ -14,4 +14,10 @@ public class CustomNetworkRoomPlayer : NetworkRoomPlayer
     {
         RoomUIController.instance.UpdateRoomPlayers();
     }
+
+    public override void ReadyStateChanged(bool oldReadyState, bool newReadyState)
+    {
+        base.ReadyStateChanged(oldReadyState, newReadyState);
+        RoomUIController.instance.UpdateRoomPlayers();
+    }
 }

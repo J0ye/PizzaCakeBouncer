@@ -47,8 +47,20 @@ public class RoomUIController : MonoBehaviour
         foreach (var slot in nw.roomSlots)
         {
             var player = Instantiate(roomPlayerPrefab, playerPanel.transform);
+            var playerText = player.transform.Find("PlayerText").GetComponent<TMP_Text>();
             // Rename the player
-            player.transform.Find("PlayerText").GetComponent<TMP_Text>().text = "Player" + (slot.index + 1);
+            playerText.text = "Player" + (slot.index + 1);
+            if (slot.readyToBegin)
+            {
+                playerText.color = Color.green;
+            }
         }
+    }
+
+    public void ChangeReadyState()
+    {
+        CustomNetworkRoomPlayer roomPlayer = NetworkClient.localPlayer.gameObject.GetComponent<CustomNetworkRoomPlayer>();
+        // invert the ready state
+        roomPlayer.CmdChangeReadyState(!roomPlayer.readyToBegin);
     }
 }
