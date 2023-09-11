@@ -12,6 +12,7 @@ public class GameController : MonoBehaviourPun
     public GameState gameState;
     public TMP_Text gameInfoText;
 
+    [Tooltip("Set in editor. One entry for each card type. Also specifies the order of the searched cards in the game.")]
     [SerializeField]
     private Card[] cardTypes;
     [SerializeField]
@@ -39,7 +40,9 @@ public class GameController : MonoBehaviourPun
     /// </summary>
     private int cardsDrawnCounter = 0;
     private bool isPlaying = false;
-
+    /// <summary>
+    /// Basically a representation of the card pile on the table. Gets cleared after each correctly selected card.
+    /// </summary>
     private List<Card> pile = new List<Card>(); 
 
     private void Start()
@@ -144,6 +147,7 @@ public class GameController : MonoBehaviourPun
             // offline solution
             isPlaying = false;
         }
+        StartCoroutine(RemovePile());
         // Continue game after t
         Invoke(nameof(ContinueGame), timeForVictory);
     }
@@ -189,7 +193,6 @@ public class GameController : MonoBehaviourPun
         {
             isPlaying = true;
         }
-        StartCoroutine(RemovePile());
         ServerSpawnNextCard();
     }
 
@@ -205,16 +208,15 @@ public class GameController : MonoBehaviourPun
 
     public void ServerSpawnFirstCard()
     {
-        if(!PhotonNetwork.IsConnectedAndReady)
+        int randomIndex = Random.Range(0, cardTypes.Length); // Get Random card
+        if (!PhotonNetwork.IsConnectedAndReady)
         {
             //offline solution
-            int randomIndex = Random.Range(0, cardTypes.Length); // Get Random card
             RpcSpawnCardWithoutCycle(randomIndex);
         }
 
         if (PhotonNetwork.IsMasterClient)
         {
-            int randomIndex = Random.Range(0, cardTypes.Length); // Get Random card
             photonView.RPC(nameof(RpcSpawnCardWithoutCycle), RpcTarget.All, randomIndex); // Call everybody to draw first and set wanted to 0
         }
         else
@@ -231,16 +233,15 @@ public class GameController : MonoBehaviourPun
     /// </summary>
     public void ServerSpawnNextCard()
     {
+        int randomIndex = Random.Range(0, cardTypes.Length); // Get Random card
         if (!PhotonNetwork.IsConnectedAndReady)
         {
             //offline solution
-            int randomIndex = Random.Range(0, cardTypes.Length); // Get Random card
             RpcSpawnCard(randomIndex);
         }
 
         if (PhotonNetwork.IsMasterClient)
         {
-            int randomIndex = Random.Range(0, cardTypes.Length); // Get Random card
             photonView.RPC(nameof(RpcSpawnCard), RpcTarget.All, randomIndex); // Call everybody to discard old card and draw new
         }
         else
@@ -275,8 +276,7 @@ public class GameController : MonoBehaviourPun
         {
             pile.Add(currentCardInPlay.GetComponent<Card>()); // Add card to discard pile
             pile[pile.Count - 1].SetUnInteractable(); // Deactivate interaction with card
-            currentCardInPlay.transform.position = currentCardInPlay.transform.position
-                - Vector3.back * pile.Count;
+            MoveCardsinPileBack();
         }
         currentCardInPlay = Instantiate(cardTypes[cardIndex].gameObject, cardSpawnPosition, Quaternion.identity);
         cardsDrawnCounter++;
@@ -284,6 +284,16 @@ public class GameController : MonoBehaviourPun
         {
             EndGame();
             return;
+        }
+    }
+
+    private void MoveCardsinPileBack()
+    {
+        int i = pile.Count;
+        foreach(Card c in pile)
+        {
+            c.transform.position = Vector3.forward * i;
+            i--;
         }
     }
 

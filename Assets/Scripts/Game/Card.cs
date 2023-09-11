@@ -168,6 +168,6 @@ public class Card : MonoBehaviour
         // Move background image further back in order
         transform.GetChild(0).GetComponent<SpriteRenderer>().sortingOrder = -4;
         // Move image of card further back in order
-        transform.GetChild(0).GetChild(0).GetComponent<SpriteRenderer>().sortingOrder = -3;
+        transform.GetChild(0).GetChild(0).GetComponent<SpriteRenderer>().sortingOrder = -4;
     }
 }
